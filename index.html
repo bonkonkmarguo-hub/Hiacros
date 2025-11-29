@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Paiement Mobile Money</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: #f3f3f3;
+        padding: 20px;
+    }
+    .container {
+        max-width: 420px;
+        margin: auto;
+        background: #ffffff;
+        padding: 25px;
+        border-radius: 14px;
+        box-shadow: 0 0 14px rgba(0,0,0,0.15);
+    }
+    button {
+        width: 100%;
+        padding: 14px;
+        margin-top: 12px;
+        font-size: 18px;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        color: white;
+        font-weight: bold;
+    }
+    #orange { background:#ff7900; }
+    #moov { background:#0099ff; }
+    #telecel { background:#aaa; cursor:not-allowed; }
+</style>
+</head>
+
+<body>
+<div class="container">
+    <h2>Paiement Mobile Money</h2>
+
+    <label>Montant :</label>
+    <input id="montant" type="number" placeholder="Entrez le montant"
+           style="width:100%; padding:12px; margin-bottom:18px; border-radius:8px; font-size:16px;">
+
+    <h3>Choisissez un mode de paiement :</h3>
+
+    <button id="orange" onclick="payer('orange')">Orange Money</button>
+    <button id="moov" onclick="payer('moov')">Moov Money</button>
+    <button id="telecel" disabled>Telecel (désactivé)</button>
+
+    <p id="info" style="margin-top:25px; font-weight:bold;"></p>
+</div>
+
+<script>
+function payer(operateur) {
+    let montant = document.getElementById("montant").value;
+    let info = document.getElementById("info");
+
+    if (!montant || montant <= 0) {
+        info.innerHTML = "⚠️ Entrez un montant valide.";
+        return;
+    }
+
+    // Numéros définis
+    let num = {
+        orange: "64099806",
+        moov: "73307534"
+    };
+
+    let codes = {
+        orange: `*144*2*1*${num.orange}*${montant}#`,
+        moov: `*555*1*1*${num.moov}*${montant}#`
+    };
+
+    let code = codes[operateur];
+    let telLink = "tel:" + encodeURIComponent(code);
+
+    info.innerHTML = `
+        Code généré : ${code}<br><br>
+        <a href="${telLink}">
+            <button style="background:#28a745; width:100%; padding:14px; border-radius:10px;">
+                Lancer le paiement
+            </button>
+        </a>
+    `;
+}
+</script>
+
+</body>
+</html>
